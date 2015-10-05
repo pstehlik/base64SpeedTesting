@@ -28,6 +28,7 @@ void encodeDecodeLoop(shortText, longText, iterations, libname, encode, decode){
 	header(libname, iterations)
 	def avg = totalDur = count = 0
 	iterations.times{ it ->
+		//don't want the exact same string in each loop
 		shortText = shortText + it
 		longText = longText + it
 		
@@ -111,7 +112,7 @@ encodeDecodeLoop(shortTxt, longTxt, iters, 'bouncyCastle', encodeBouncyCastle, d
 encodeDecodeLoop(shortTxt, longTxt, iters, 'java DatatypeConverter', encodeJava, decodeJava)
 encodeDecodeLoop(shortTxt, longTxt, iters, 'Apache Commons', encodeApacheCommons, decodeApacheCommons)
 
-iters = 300
+iters = 500
 println ""
 println "--- for real ---"
 encodeDecodeLoop(shortTxt, longTxt, iters, 'groovy', encodeGroovy, decodeGroovy)
