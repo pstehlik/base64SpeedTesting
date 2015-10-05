@@ -27,6 +27,7 @@ println "longTxt size [${longTxt.length()}]"
 void encodeDecodeLoop(shortText, longText, iterations, libname, encode, decode){
 	header(libname, iterations)
 	def avg = 0
+	def totalDur = 0
 	def single
 	def count = 0
 	iterations.times{ it ->
@@ -43,14 +44,14 @@ void encodeDecodeLoop(shortText, longText, iterations, libname, encode, decode){
 		def end = System.currentTimeMillis()
 		def dur = end - start
 /*		println "[${count}] took [${dur}]ms"*/
-		avg += dur
+		totalDur += dur
 		count++
 		
 		assert sT == shortText
 		assert lT == longText
 	}
-	avg = avg / count
-	footer(libname, avg)	
+	avg = totalDur / count
+	footer(libname, avg, totalDur)	
 }
 
 void header(which, iter){
@@ -58,8 +59,8 @@ void header(which, iter){
 	println "$which: iterations [${iter}]"
 }
 
-void footer(which, avg){
-	println "$which: average [${avg}]ms"
+void footer(which, avg, totalDur){
+	println "$which: total [${totalDur}]ms, average [${avg}]ms"
 }
 
 
