@@ -9,34 +9,36 @@ import org.bouncycastle.util.encoders.Base64 as BC_Base64
 import org.apache.commons.codec.binary.Base64 as Apache_Base64
 import javax.xml.bind.DatatypeConverter
 
+if(args.size() < 2){
+	println "call groovy testBase64.groovy <loop count to create text> <loop count for encode/decode loop>"
+	println "for example `groovy testBase64.groovy 5000 500`"
+	return
+}
+def createTextLoop = Integer.parseInt(args[0])
+def encodeDecodeLoopCount = Integer.parseInt(args[1])
 
-String shortTxt = "some short text"
 String longTxt = ""
 
-println "Generating long text"
+println "Generating text"
 //fill in "long" text - not very efficient but only needed once
-5000.times{
+createTextLoop.times{
 	longTxt += "I am a long text file with lots of text in each line that will generate a lot of text.${System.lineSeparator()}"
 }
 
 
-println "shortTxt size [${shortTxt.length()}]"
-println "longTxt size [${longTxt.length()}]"
+println "Text size [${longTxt.length()}]"
 
 
-void encodeDecodeLoop(shortText, longText, iterations, libname, encode, decode){
+void encodeDecodeLoop(longText, iterations, libname, encode, decode){
 	header(libname, iterations)
 	def avg = totalDur = count = 0
 	iterations.times{ it ->
 		//don't want the exact same string in each loop
-		shortText = shortText + it
 		longText = longText + it
 		
 		def start = System.currentTimeMillis()
-		String shortTextB64 = encode(shortText)
 		String longTextB64 = encode(longText)
 	
-		String sT = decode(shortTextB64)
 		String lT = decode(longTextB64)
 				
 		def end = System.currentTimeMillis()
@@ -45,7 +47,6 @@ void encodeDecodeLoop(shortText, longText, iterations, libname, encode, decode){
 		totalDur += dur
 		count++
 		
-		assert sT == shortText
 		assert lT == longText
 	}
 	avg = totalDur / count
@@ -106,17 +107,17 @@ def decodeApacheCommons = { String text ->
 int iters = 50
 println ""
 println "--- warmup ---"
-encodeDecodeLoop(shortTxt, longTxt, iters, 'groovy', encodeGroovy, decodeGroovy)
-encodeDecodeLoop(shortTxt, longTxt, iters, 'migBase64', encodeMig, decodeMig)
-encodeDecodeLoop(shortTxt, longTxt, iters, 'bouncyCastle', encodeBouncyCastle, decodeBouncyCastle)
-encodeDecodeLoop(shortTxt, longTxt, iters, 'java DatatypeConverter', encodeJava, decodeJava)
-encodeDecodeLoop(shortTxt, longTxt, iters, 'Apache Commons', encodeApacheCommons, decodeApacheCommons)
+encodeDecodeLoop(longTxt, iters, 'groovy', encodeGroovy, decodeGroovy)
+encodeDecodeLoop(longTxt, iters, 'migBase64', encodeMig, decodeMig)
+encodeDecodeLoop(longTxt, iters, 'bouncyCastle', encodeBouncyCastle, decodeBouncyCastle)
+encodeDecodeLoop(longTxt, iters, 'java DatatypeConverter', encodeJava, decodeJava)
+encodeDecodeLoop(longTxt, iters, 'Apache Commons', encodeApacheCommons, decodeApacheCommons)
 
-iters = 500
+iters = encodeDecodeLoopCount
 println ""
 println "--- for real ---"
-encodeDecodeLoop(shortTxt, longTxt, iters, 'groovy', encodeGroovy, decodeGroovy)
-encodeDecodeLoop(shortTxt, longTxt, iters, 'migBase64', encodeMig, decodeMig)
-encodeDecodeLoop(shortTxt, longTxt, iters, 'bouncyCastle', encodeBouncyCastle, decodeBouncyCastle)
-encodeDecodeLoop(shortTxt, longTxt, iters, 'java DatatypeConverter', encodeJava, decodeJava)
-encodeDecodeLoop(shortTxt, longTxt, iters, 'Apache Commons', encodeApacheCommons, decodeApacheCommons)
+encodeDecodeLoop(longTxt, iters, 'groovy', encodeGroovy, decodeGroovy)
+encodeDecodeLoop(longTxt, iters, 'migBase64', encodeMig, decodeMig)
+encodeDecodeLoop(longTxt, iters, 'bouncyCastle', encodeBouncyCastle, decodeBouncyCastle)
+encodeDecodeLoop(longTxt, iters, 'java DatatypeConverter', encodeJava, decodeJava)
+encodeDecodeLoop(longTxt, iters, 'Apache Commons', encodeApacheCommons, decodeApacheCommons)
