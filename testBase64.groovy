@@ -26,10 +26,7 @@ println "longTxt size [${longTxt.length()}]"
 
 void encodeDecodeLoop(shortText, longText, iterations, libname, encode, decode){
 	header(libname, iterations)
-	def avg = 0
-	def totalDur = 0
-	def single
-	def count = 0
+	def avg = totalDur = count = 0
 	iterations.times{ it ->
 		shortText = shortText + it
 		longText = longText + it
